@@ -46,6 +46,8 @@ public class MainMenu {
 			public void actionPerformed(ActionEvent e) {
 				InputMenu nw = new InputMenu();
 				nw.NewScreen();
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		btnInput.setBounds(173, 94, 117, 29);
