@@ -14,15 +14,13 @@ public class Input_node
 		duration = 0;
 		index = 0;
 		next = null;
-		
 	}
 	
-	Input_node(String a, String b, int c, int d)
+	Input_node(String a, String b, int c)
 	{
 		activity = a;
 		dependency = b;
 		duration = c;
-		index = d;
 	}
 	
 	public String get_activity()
