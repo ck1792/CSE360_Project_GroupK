@@ -91,6 +91,8 @@ public class InputMenu {
 			public void actionPerformed(ActionEvent e) {
 				MainMenu nw = new MainMenu();
 				nw.main(null);
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		btnReturnToMenu.setBounds(159, 232, 129, 29);
