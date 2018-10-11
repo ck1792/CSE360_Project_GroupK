@@ -4,6 +4,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
+import java.awt.Color;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class HelpMenu {
 
@@ -37,6 +42,7 @@ public class HelpMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -46,12 +52,24 @@ public class HelpMenu {
 		lblHelpMenu.setBounds(175, 26, 82, 16);
 		frame.getContentPane().add(lblHelpMenu);
 		
-		JLabel lblInputOptionWill = new JLabel("Input Option: Will allow the user to enter multiple occurances of ");
-		lblInputOptionWill.setBounds(6, 54, 438, 23);
-		frame.getContentPane().add(lblInputOptionWill);
+		JTextArea txtrInputOptionWill = new JTextArea();
+		txtrInputOptionWill.setWrapStyleWord(true);
+		txtrInputOptionWill.setEditable(false);
+		txtrInputOptionWill.setLineWrap(true);
+		txtrInputOptionWill.setText("Input Option: Allows the user to enter multiple occurances of Activity names, Durations and a list of dependencies. Activity names can be multiple charaters and Durations must be integers.\n\nError Messages: If an error occurs the user needs to restart.");
+		txtrInputOptionWill.setBounds(6, 64, 438, 87);
+		frame.getContentPane().add(txtrInputOptionWill);
 		
-		JLabel lblActivityNamesDurations = new JLabel("activity names, durations and a list of dependencies");
-		lblActivityNamesDurations.setBounds(92, 71, 352, 23);
-		frame.getContentPane().add(lblActivityNamesDurations);
+		JButton btnReturnToMain = new JButton("Return to Main Menu");
+		btnReturnToMain.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenu nw = new MainMenu();
+				nw.main(null);
+				frame.setVisible(false);
+				frame.dispose();
+			}
+		});
+		btnReturnToMain.setBounds(147, 215, 154, 29);
+		frame.getContentPane().add(btnReturnToMain);
 	}
 }
