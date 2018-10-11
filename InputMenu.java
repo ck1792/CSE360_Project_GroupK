@@ -1,5 +1,4 @@
 import java.awt.EventQueue;
-import java.awt.TextArea;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -22,7 +21,8 @@ public class InputMenu extends JFrame{
 	private JTextField dependencies;
 	private JTextField duration;
 	private JTextField output;
-
+	private JTextField textField;
+	private int error_message = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -55,6 +55,18 @@ public class InputMenu extends JFrame{
 		frame.setBounds(100, 100, 450, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		
+		JButton btnNewButton = new JButton("Process");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				OutputWindow nw = new OutputWindow();
+//				nw.OutputScreen();
+//				frame.setVisible(false);
+//				frame.dispose();
+			}
+		});
+		btnNewButton.setBounds(98, 232, 88, 29);
+		frame.getContentPane().add(btnNewButton);
 		
 		JLabel lblInputMenu = new JLabel("Input Menu");
 		lblInputMenu.setBounds(186, 16, 71, 16);
@@ -97,7 +109,7 @@ public class InputMenu extends JFrame{
 				counter = 0;
 			}
 		});
-		btnRestart.setBounds(319, 232, 78, 29);
+		btnRestart.setBounds(366, 232, 78, 29);
 		frame.getContentPane().add(btnRestart);
 		
 		JButton btnReturnToMenu = new JButton("Return to Main Menu");
@@ -109,7 +121,7 @@ public class InputMenu extends JFrame{
 				frame.dispose();
 			}
 		});
-		btnReturnToMenu.setBounds(151, 232, 156, 29);
+		btnReturnToMenu.setBounds(198, 232, 156, 29);
 		frame.getContentPane().add(btnReturnToMenu);
 		
 		output = new JTextField();
@@ -153,11 +165,11 @@ public class InputMenu extends JFrame{
 			}
 		});
 		//
-		btnAdd.setBounds(51, 232, 88, 29);
+		btnAdd.setBounds(6, 232, 88, 29);
 		frame.getContentPane().add(btnAdd);
 		
-		JLabel lblOutput = new JLabel("Display Message");
-		lblOutput.setBounds(63, 166, 111, 16);
+		JLabel lblOutput = new JLabel("Output");
+		lblOutput.setBounds(63, 166, 61, 16);
 		frame.getContentPane().add(lblOutput);
 		
 		JLabel lblOutput2 = new JLabel("Output");
@@ -165,38 +177,68 @@ public class InputMenu extends JFrame{
 		lblOutput2.setBounds(186, 320, 61, 16);
 		frame.getContentPane().add(lblOutput2);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBackground(Color.LIGHT_GRAY);
-		textArea.setLineWrap(true);
-		textArea.setEditable(false);
-		textArea.setBounds(6, 340, 438, 177);
-		frame.getContentPane().add(textArea);
+		textField = new JTextField();
+		textField.setEditable(false);
+		textField.setBounds(50, 349, 348, 134);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
 		
-		JButton output = new JButton("Process");
+		JButton output = new JButton("Get output");
 		output.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textArea.append(get_print());
+				textField.setText(get_print());
 			}
 		});
-		output.setBounds(174, 526, 100, 29);
+		output.setBounds(182, 495, 100, 29);
 		frame.getContentPane().add(output);
-		
-		
 	}
-	
+	public void matcherror() {
+		String testing = "";
+		Input_node temp3 = head;
+	for(int i = 0; i < counter; i++) {
+		boolean match = false;
+		testing = temp3.get_activity();
+		if(temp3.get_dependency().equals("")) {
+			Input_node temp4 = head;
+		for(int j = 0; j < counter; j++) {
+			if(temp3.get_dependency() != testing){
+				if(temp3.get_dependency() == temp4.get_activity()){
+					match = true;
+				}
+				}
+			 temp4 = temp4.get_next();
+			}
+		}
+		else {
+			match = true;
+		}
+		if(match == false) {
+			error_message = 1;
+		}
+		
+		temp3= temp3.get_next();
+	}
+	}
+
 	public String get_print(){
+		matcherror();
 		Input_node temp2 = head;
 		print = "";
 		for(int i = 0; i < counter; i++){
-//			System.out.println(temp2.get_activity());
-//			System.out.println(temp2.get_dependency());
-//			System.out.println(temp2.get_duration());
 			print = print + temp2.get_activity() + " ";
 			print = print + temp2.get_dependency() + " ";
 			print = print + temp2.get_duration() + " ";
 			temp2 = temp2.get_next();
 		}
-//		System.out.println(print);
-		return print;
+		if (error_message == 1) {
+		return ("Error has occurred");
+		}else {
+			return print;
+		}
 	}
+	//must have a dependency, must be mentioned in dependency
+	//error check for all nodes must be connected
+	
+	//there cannot be a cycle
+	
 }
