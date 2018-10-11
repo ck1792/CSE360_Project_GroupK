@@ -56,17 +56,12 @@ public class InputMenu extends JFrame{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JButton btnNewButton = new JButton("Process");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
 //				OutputWindow nw = new OutputWindow();
 //				nw.OutputScreen();
 //				frame.setVisible(false);
 //				frame.dispose();
-			}
-		});
-		btnNewButton.setBounds(98, 232, 88, 29);
-		frame.getContentPane().add(btnNewButton);
+			
+		
 		
 		JLabel lblInputMenu = new JLabel("Input Menu");
 		lblInputMenu.setBounds(186, 16, 71, 16);
@@ -183,7 +178,7 @@ public class InputMenu extends JFrame{
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		JButton output = new JButton("Get output");
+		JButton output = new JButton("Process");
 		output.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textField.setText(get_print());
@@ -192,13 +187,14 @@ public class InputMenu extends JFrame{
 		output.setBounds(182, 495, 100, 29);
 		frame.getContentPane().add(output);
 	}
+	//
 	public void matcherror() {
 		String testing = "";
 		Input_node temp3 = head;
 	for(int i = 0; i < counter; i++) {
 		boolean match = false;
 		testing = temp3.get_activity();
-		if(temp3.get_dependency().equals("")) {
+		if(temp3.get_dependency().equals(testing)) {
 			Input_node temp4 = head;
 		for(int j = 0; j < counter; j++) {
 			if(temp3.get_dependency() != testing){
@@ -219,9 +215,71 @@ public class InputMenu extends JFrame{
 		temp3= temp3.get_next();
 	}
 	}
+	
+	public void cycle_check() {
+		Input_node temp = head;
+		int cyclecounter = 0;
+		for(int i =0; i < counter; i++) {
+			if(temp.get_dependency().equals("")) {
+				cyclecounter++; //will + on cycle counter to counter if no dependency is checked
+			
+			}
+			temp = temp.get_next();
+		}
+		
+		if(cyclecounter == 0) {
+			error_message = 1;
+		}else {
+			error_message = 0;
+		}
+	}
 
+	public void sort() {
+		Input_node temp = head;
+		Input_node temp2 = head;
+		for (int i = 0; i < counter; i++) {
+			int min = 9999;
+			for( int j = 0; j < counter; j++) {
+				if(temp.get_duration() < min) {
+					temp.set_index(i);
+					min = temp.get_duration();
+					temp2.set_index(999);//this will make the index set before to some other value high
+				}
+				if(temp.get_duration() == min) {
+					temp2.set_index(i+1);
+					temp.set_index(i);
+				}
+			
+				temp2 = temp;
+				temp = temp.get_next();
+			}
+		}
+		sortbyindex();//indexed every nodes, need to sort by index
+	}
+	
+	public void sortbyindex() {
+		Input_node temp = head;
+		Input_node temp2 = head;
+		for(int i = 0; i < counter; i++) {
+			for(int j = 0; j < counter; j++) {
+				if(temp.get_index() < temp.get_next().get_index()) {
+					temp2 = temp.get_next();
+					temp.set_next(temp);
+					temp = temp2;
+				}
+				temp = temp.get_next();
+				
+			}
+		}
+	
+	}
+	//
 	public String get_print(){
+		//
 		matcherror();
+		cycle_check();
+		sort();
+		//
 		Input_node temp2 = head;
 		print = "";
 		for(int i = 0; i < counter; i++){
