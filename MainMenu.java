@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class MainMenu {
 
@@ -37,6 +40,7 @@ public class MainMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -58,6 +62,8 @@ public class MainMenu {
 			public void actionPerformed(ActionEvent e) {
 				HelpMenu nw = new HelpMenu();
 				nw.HelpScreen();
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		btnNewButton.setBounds(173, 176, 117, 29);
@@ -68,6 +74,8 @@ public class MainMenu {
 			public void actionPerformed(ActionEvent e) {
 				AboutMenu nw = new AboutMenu();
 				nw.AboutScreen();
+				frame.setVisible(false);
+				frame.dispose();
 			}
 		});
 		btnAbout.setBounds(173, 135, 117, 29);
@@ -81,6 +89,10 @@ public class MainMenu {
 		});
 		btnQuit.setBounds(173, 217, 117, 29);
 		frame.getContentPane().add(btnQuit);
+		
+		JLabel lblNewLabel = new JLabel("Main Menu");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(173, 22, 117, 29);
+		frame.getContentPane().add(lblNewLabel);
 	}
-
 }
