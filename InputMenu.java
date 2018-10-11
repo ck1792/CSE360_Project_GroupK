@@ -7,13 +7,15 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
-public class InputMenu {
+public class InputMenu extends JFrame{
 
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField activity;
+	private JTextField dependencies;
+	private JTextField duration;
+	private JTextField output;
 
 	/**
 	 * Launch the application.
@@ -43,6 +45,7 @@ public class InputMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -55,20 +58,20 @@ public class InputMenu {
 		lblInputMenu.setBounds(186, 37, 71, 16);
 		frame.getContentPane().add(lblInputMenu);
 		
-		textField = new JTextField();
-		textField.setBounds(250, 84, 130, 26);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		activity = new JTextField();
+		activity.setBounds(250, 84, 130, 26);
+		frame.getContentPane().add(activity);
+		activity.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(250, 122, 130, 26);
-		frame.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		dependencies = new JTextField();
+		dependencies.setBounds(250, 122, 130, 26);
+		frame.getContentPane().add(dependencies);
+		dependencies.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(250, 160, 130, 26);
-		frame.getContentPane().add(textField_2);
-		textField_2.setColumns(10);
+		duration = new JTextField();
+		duration.setBounds(250, 160, 130, 26);
+		frame.getContentPane().add(duration);
+		duration.setColumns(10);
 		
 		JLabel lblActivity = new JLabel("Activity");
 		lblActivity.setBounds(63, 89, 61, 16);
@@ -83,10 +86,17 @@ public class InputMenu {
 		frame.getContentPane().add(lblDuration);
 		
 		JButton btnRestart = new JButton("Restart");
+		btnRestart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				activity.setText("");
+				dependencies.setText("");
+				duration.setText("");
+			}
+		});
 		btnRestart.setBounds(327, 232, 117, 29);
 		frame.getContentPane().add(btnRestart);
 		
-		JButton btnReturnToMenu = new JButton("Return to Menu");
+		JButton btnReturnToMenu = new JButton("Return to Main Menu");
 		btnReturnToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MainMenu nw = new MainMenu();
@@ -95,15 +105,17 @@ public class InputMenu {
 				frame.dispose();
 			}
 		});
-		btnReturnToMenu.setBounds(159, 232, 129, 29);
+		btnReturnToMenu.setBounds(146, 232, 156, 29);
 		frame.getContentPane().add(btnReturnToMenu);
 		
 		JLabel lblOutput = new JLabel("Output");
 		lblOutput.setBounds(63, 204, 61, 16);
 		frame.getContentPane().add(lblOutput);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(250, 204, 130, 16);
-		frame.getContentPane().add(textArea);
+		output = new JTextField();
+		output.setEditable(false);
+		output.setBounds(250, 198, 130, 26);
+		frame.getContentPane().add(output);
+		output.setColumns(10);
 	}
 }
