@@ -1,4 +1,5 @@
 import java.awt.EventQueue;
+import java.awt.TextArea;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -21,7 +22,6 @@ public class InputMenu extends JFrame{
 	private JTextField dependencies;
 	private JTextField duration;
 	private JTextField output;
-	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -55,18 +55,6 @@ public class InputMenu extends JFrame{
 		frame.setBounds(100, 100, 450, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
-		JButton btnNewButton = new JButton("Process");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-//				OutputWindow nw = new OutputWindow();
-//				nw.OutputScreen();
-//				frame.setVisible(false);
-//				frame.dispose();
-			}
-		});
-		btnNewButton.setBounds(98, 232, 88, 29);
-		frame.getContentPane().add(btnNewButton);
 		
 		JLabel lblInputMenu = new JLabel("Input Menu");
 		lblInputMenu.setBounds(186, 16, 71, 16);
@@ -109,7 +97,7 @@ public class InputMenu extends JFrame{
 				counter = 0;
 			}
 		});
-		btnRestart.setBounds(366, 232, 78, 29);
+		btnRestart.setBounds(319, 232, 78, 29);
 		frame.getContentPane().add(btnRestart);
 		
 		JButton btnReturnToMenu = new JButton("Return to Main Menu");
@@ -121,7 +109,7 @@ public class InputMenu extends JFrame{
 				frame.dispose();
 			}
 		});
-		btnReturnToMenu.setBounds(198, 232, 156, 29);
+		btnReturnToMenu.setBounds(151, 232, 156, 29);
 		frame.getContentPane().add(btnReturnToMenu);
 		
 		output = new JTextField();
@@ -165,11 +153,11 @@ public class InputMenu extends JFrame{
 			}
 		});
 		//
-		btnAdd.setBounds(6, 232, 88, 29);
+		btnAdd.setBounds(51, 232, 88, 29);
 		frame.getContentPane().add(btnAdd);
 		
-		JLabel lblOutput = new JLabel("Output");
-		lblOutput.setBounds(63, 166, 61, 16);
+		JLabel lblOutput = new JLabel("Display Message");
+		lblOutput.setBounds(63, 166, 111, 16);
 		frame.getContentPane().add(lblOutput);
 		
 		JLabel lblOutput2 = new JLabel("Output");
@@ -177,20 +165,23 @@ public class InputMenu extends JFrame{
 		lblOutput2.setBounds(186, 320, 61, 16);
 		frame.getContentPane().add(lblOutput2);
 		
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBounds(50, 349, 348, 134);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
+		JTextArea textArea = new JTextArea();
+		textArea.setBackground(Color.LIGHT_GRAY);
+		textArea.setLineWrap(true);
+		textArea.setEditable(false);
+		textArea.setBounds(6, 340, 438, 177);
+		frame.getContentPane().add(textArea);
 		
-		JButton output = new JButton("Get output");
+		JButton output = new JButton("Process");
 		output.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textField.setText(get_print());
+				textArea.append(get_print());
 			}
 		});
-		output.setBounds(182, 495, 100, 29);
+		output.setBounds(174, 526, 100, 29);
 		frame.getContentPane().add(output);
+		
+		
 	}
 	
 	public String get_print(){
