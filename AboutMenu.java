@@ -1,3 +1,7 @@
+/*
+AboutMenu.java by Dekart Kosa, Xiang Li
+Version 1.0
+*/
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
