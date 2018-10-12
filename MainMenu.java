@@ -1,3 +1,7 @@
+/*
+MainMenu.java by Dekart Kosa, Xiang Li
+version 1.0
+*/
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
