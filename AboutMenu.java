@@ -1,6 +1,6 @@
 /*
 AboutMenu.java by Dekart Kosa, Xiang Li
-Version 1.0
+Version 1.1
 */
 import java.awt.EventQueue;
 
