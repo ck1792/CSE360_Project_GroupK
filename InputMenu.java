@@ -242,8 +242,6 @@ public class InputMenu extends JFrame{
 		
 		if(cyclecounter == 0) {
 			error_message = 1;
-		}else {
-			error_message = 0;
 		}
 	}
 
