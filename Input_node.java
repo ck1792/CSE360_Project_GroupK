@@ -1,4 +1,7 @@
-
+/*
+Input_node.java by Kai Chen
+Version 1.0
+*/
 public class Input_node 
 {
 	private String activity;
