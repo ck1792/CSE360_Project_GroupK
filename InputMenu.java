@@ -1,6 +1,6 @@
 /*
 InputMenu.java by Dekart Kosa, Xiang Li, Kai Chen, Jiwon Kim
-version 1.31
+Version 1.51
 */
 import java.awt.EventQueue;
 
