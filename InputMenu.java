@@ -98,6 +98,8 @@ public class InputMenu extends JFrame{
 				duration.setText("");
 				head = null;
 				counter = 0;
+				textField.setText("");
+				output.setText("Restart completed.");
 			}
 		});
 		btnRestart.setBounds(366, 232, 78, 29);
