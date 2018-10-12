@@ -53,15 +53,15 @@ public class HelpMenu {
 		
 		JLabel lblHelpMenu = new JLabel("Help Menu");
 		lblHelpMenu.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHelpMenu.setBounds(175, 26, 82, 16);
+		lblHelpMenu.setBounds(175, 16, 82, 16);
 		frame.getContentPane().add(lblHelpMenu);
 		
 		JTextArea txtrInputOptionWill = new JTextArea();
 		txtrInputOptionWill.setWrapStyleWord(true);
 		txtrInputOptionWill.setEditable(false);
 		txtrInputOptionWill.setLineWrap(true);
-		txtrInputOptionWill.setText("Input Option: Allows the user to enter multiple occurances of Activity names, Durations and a list of dependencies. Activity names can be multiple charaters and Durations must be integers.\n\nError Messages: If an error occurs the user needs to restart.");
-		txtrInputOptionWill.setBounds(6, 64, 438, 87);
+		txtrInputOptionWill.setText("Input Option: Allows the user to enter multiple occurances of Activity names, Durations and a list of dependencies. Activity names can be multiple charaters and Durations must be integers. The user needs to add the first set of node in the text fields and then click the Add Node button. And repeat until they have entered all the neccasry inputs. Lastly they need to click the process button inorder to comple the processing and show the output\n\nError Messages: If an error occurs the user needs to restart.\n\nQuit: Quitting the progam completely is done by either clicking the quit button in the Main Menu or clicking the X from any window.");
+		txtrInputOptionWill.setBounds(6, 44, 438, 200);
 		frame.getContentPane().add(txtrInputOptionWill);
 		
 		JButton btnReturnToMain = new JButton("Return to Main Menu");
@@ -73,7 +73,7 @@ public class HelpMenu {
 				frame.dispose();
 			}
 		});
-		btnReturnToMain.setBounds(147, 215, 154, 29);
+		btnReturnToMain.setBounds(147, 243, 154, 29);
 		frame.getContentPane().add(btnReturnToMain);
 	}
 }
