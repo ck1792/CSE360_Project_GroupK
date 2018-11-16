@@ -1,7 +1,3 @@
-/*
-InputMenu.java by Dekart Kosa, Xiang Li, Kai Chen, Jiwon Kim
-Version 1.51
-*/
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,17 +8,24 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 public class InputMenu extends JFrame{
 	
-	private Input_node head;
-	private int counter = 0;
-	private String print = "";
+	private ArrayList<Input_node> node_list = new ArrayList<Input_node>();
+	private ArrayList<ArrayList<Integer>> path_list = new ArrayList<ArrayList<Integer>>();
+	private ArrayList<Integer> duration_list = new ArrayList<Integer>();
+	private ArrayList<String> output_list = new ArrayList<String>();
+//	private Input_node head;
+//	private int counter = 0;
+	/*
+	 * 0: no error
+	 * 1: disconnect
+	 * 2: cycle
+	 */
 	private int error_message = 0;
-	private List<String> dependencies_list;
 
 	private JFrame frame;
 	private JTextField activity;
@@ -97,11 +100,12 @@ public class InputMenu extends JFrame{
 		JButton btnRestart = new JButton("Restart");
 		btnRestart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				node_list.clear();
 				activity.setText("");
 				dependencies.setText("");
 				duration.setText("");
-				head = null;
-				counter = 0;
+//				head = null;
+//				counter = 0;
 				textField.setText("");
 				output.setText("Restart completed.");
 			}
@@ -145,20 +149,21 @@ public class InputMenu extends JFrame{
 						}
 						else{
 							Input_node node = new Input_node(a,b,c);
-							counter += 1;
-							if(head == null){
-								head = node;
-							}
-							else{
-								Input_node temp = head;
-								while(true){
-									if(temp.get_next() == null){
-										break;
-									}
-									temp = temp.get_next();
-								}
-								temp.set_next(node);
-							}
+							node_list.add(node);
+//							counter += 1;
+//							if(head == null){
+//								head = node;
+//							}
+//							else{
+//								Input_node temp = head;
+//								while(true){
+//									if(temp.get_next() == null){
+//										break;
+//									}
+//									temp = temp.get_next();
+//								}
+//								temp.set_next(node);
+//							}
 							activity.setText("");
 							dependencies.setText("");
 							duration.setText("");
@@ -201,108 +206,238 @@ public class InputMenu extends JFrame{
 		output.setBounds(171, 495, 100, 29);
 		frame.getContentPane().add(output);
 	}
-
-	//error check
-	//connection check
-	public void matcherror() {
-		int end_counter = 0;
-		Input_node temp3 = head;
-		for(int i = 0; i < counter; i++) {
-			boolean match = false;
-			get_dependencies(temp3.get_dependency());
-			if(dependencies_list.get(0).equals("")){
-				end_counter += 1;
-				Input_node temp4 = head;
-				for(int j =0; j < counter; j++){
-					get_dependencies(temp4.get_dependency());
-					for(int index = 0; index < dependencies_list.size(); index++){
-						if(temp3.get_activity().equals(dependencies_list.get(index))){
-							match = true;
-						}
-					}
-					temp4 = temp4.get_next();
+	
+	public void output()
+	{
+		path_list.clear();
+		disconnect();
+		if(error_message == 1){
+		}
+		else{
+			//find starting point
+			int starting_point = 0;
+			for(int i = 0; i < node_list.size(); i++){
+				if(node_list.get(i).get_dependency().equals("")){
+					starting_point = i;
 				}
 			}
-			else{
-				match = true;
+			ArrayList<Integer> new_path = new ArrayList<Integer>();
+			new_path.add(starting_point);
+			path_list.add(new_path);
+			output_subfunction(starting_point, 0);
+		}
+		
+	}
+	
+	public void output_subfunction(int index, int path_index){
+		boolean first_call = true;
+		for(int i = 0; i < node_list.size(); i++){
+			ArrayList<String> dependencies_list = get_dependencies(node_list.get(i).get_dependency());
+//			if(dependencies_list.size() == 0){
+//				dependencies_list.add(node_list.get(i).get_dependency());
+//			}
+			for(int j = 0; j < dependencies_list.size(); j++){
+				if(dependencies_list.get(j).equals(node_list.get(index).get_activity())){
+					if(first_call){
+						first_call = false;
+						cycle(i,path_index);
+						if(error_message == 2){
+						}
+						else{
+							path_list.get(path_index).add(i);
+							output_subfunction(i, path_index);
+						}
+					}
+					else{
+						ArrayList<Integer> new_path = new ArrayList<Integer>();
+						for(int k = 0; k < path_list.get(path_index).size(); k++){
+							new_path.add(path_list.get(path_index).get(k));
+							if(path_list.get(path_index).get(k) == index){
+								k = path_list.get(path_index).size();
+							}
+						}
+						path_list.add(new_path);
+						cycle(i,path_list.size()-1);
+						if(error_message == 2){
+						}
+						else{
+							path_list.get(path_list.size()-1).add(i);
+							output_subfunction(i, path_list.size()-1);
+						}
+					}
+				}
 			}
-			if(match == false && end_counter > 1) {
-				error_message = 1;
+		}
+	}
+	
+	//connection check
+	/*
+	 * if there are more than 1 starting points,
+	 * then it is a disconnect error.
+	 */
+	public void disconnect()
+	{
+		int starting_point_counter = 0;
+		for(int i = 0; i < node_list.size(); i++){
+			if(node_list.get(i).get_dependency().equals("")){
+				starting_point_counter += 1;
 			}
-			temp3= temp3.get_next();
+		}
+		if(starting_point_counter != 1){
+			error_message = 1;
 		}
 	}
 	
 	//cycle check
-	public void cycle_check() {
-		Input_node temp = head;
-		int cyclecounter = 0;
-		for(int i =0; i < counter; i++) {
-			if(temp.get_dependency().equals("")) {
-				cyclecounter++;
-			}
-			temp = temp.get_next();
-		}
-		
-		if(cyclecounter == 0) {
-			error_message = 1;
-		}
-	}
-
-	//index by biggest duration
-	public void sort() {
-		Input_node initialize = head;
-		for(int i = 0; i < counter; i ++){
-			initialize.set_index(0);
-			initialize = initialize.get_next();
-		}
-		int index = 0;
-		while(true){
-			boolean changed = false;
-			Input_node temp = head;
-			for (int i = 0; i < counter; i++) {
-				boolean biggest = true;
-				Input_node temp2 = head;
-				for( int j = 0; j < counter; j++) {
-					if(!temp.get_activity().equals(temp2.get_activity())){
-						if(temp.get_index() == 0){
-							if(temp2.get_index() == 0){
-								if(temp.get_duration() < temp2.get_duration()){
-									biggest = false;
-								}
-							}
-						}
-					}
-					temp2 = temp2.get_next();
-				}
-				if(biggest){
-					if(temp.get_index() == 0){
-						index += 1;
-						temp.set_index(index);
-						changed = true;
-					}
-				}
-				temp = temp.get_next();
-			}
-			if(!changed){
-				break;
+	public void cycle(int index, int path_index)
+	{
+		for(int i = 0; i < path_list.get(path_index).size(); i++){
+			if(path_list.get(path_index).get(i) == index){
+				error_message = 2;
 			}
 		}
 	}
 	
-	public void get_dependencies(String str)
+	public void sort()
 	{
-		dependencies_list = Arrays.asList(str.split("\\s*,\\s*"));
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		int size = duration_list.size();
+		for(int k = 0; k < size; k++){
+			for(int i = 0; i < duration_list.size(); i++){
+				boolean biggest = true;
+				for(int j = 0; j < duration_list.size(); j++){
+					if(duration_list.get(i) < duration_list.get(j)){
+						biggest = false;
+					}
+				}
+				if(biggest){
+					boolean added = false;
+					for(int o = 0; o < temp.size(); o++){
+						if(temp.get(o) == i){
+							added = true;
+						}
+					}
+					if(!added){
+						temp.add(i);
+					}
+					duration_list.set(i, -1);
+				}
+			}
+		}
+		duration_list.clear();
+		duration_list.addAll(temp);
+	}
+
+	//connection check
+	public void matcherror()
+	{
+//		int end_counter = 0;
+//		Input_node temp3 = head;
+//		for(int i = 0; i < counter; i++) {
+//			boolean match = false;
+//			get_dependencies(temp3.get_dependency());
+//			if(dependencies_list.get(0).equals("")){
+//				end_counter += 1;
+//				Input_node temp4 = head;
+//				for(int j =0; j < counter; j++){
+//					get_dependencies(temp4.get_dependency());
+//					for(int index = 0; index < dependencies_list.size(); index++){
+//						if(temp3.get_activity().equals(dependencies_list.get(index))){
+//							match = true;
+//						}
+//					}
+//					temp4 = temp4.get_next();
+//				}
+//			}
+//			else{
+//				match = true;
+//			}
+//			if(match == false && end_counter > 1) {
+//				error_message = 1;
+//			}
+//			temp3= temp3.get_next();
+//		}
+	}
+	
+	//cycle check
+	public void cycle_check()
+	{
+//		Input_node temp = head;
+//		int cyclecounter = 0;
+//		for(int i =0; i < counter; i++) {
+//			if(temp.get_dependency().equals("")) {
+//				cyclecounter++;
+//			}
+//			temp = temp.get_next();
+//		}
+//		
+//		if(cyclecounter == 0) {
+//			error_message = 1;
+//		}
+	}
+
+	//index by biggest duration
+//	public void sort()
+//	{
+//		Input_node initialize = head;
+//		for(int i = 0; i < counter; i ++){
+//			initialize.set_index(0);
+//			initialize = initialize.get_next();
+//		}
+//		int index = 0;
+//		while(true){
+//			boolean changed = false;
+//			Input_node temp = head;
+//			for (int i = 0; i < counter; i++) {
+//				boolean biggest = true;
+//				Input_node temp2 = head;
+//				for( int j = 0; j < counter; j++) {
+//					if(!temp.get_activity().equals(temp2.get_activity())){
+//						if(temp.get_index() == 0){
+//							if(temp2.get_index() == 0){
+//								if(temp.get_duration() < temp2.get_duration()){
+//									biggest = false;
+//								}
+//							}
+//						}
+//					}
+//					temp2 = temp2.get_next();
+//				}
+//				if(biggest){
+//					if(temp.get_index() == 0){
+//						index += 1;
+//						temp.set_index(index);
+//						changed = true;
+//					}
+//				}
+//				temp = temp.get_next();
+//			}
+//			if(!changed){
+//				break;
+//			}
+//		}
+//	}
+	
+	public ArrayList<String> get_dependencies(String str)
+	{
+		String[] dependencies = str.split("\\s*,\\s*");
+		ArrayList<String> dependencies_list = new ArrayList<String>();
+		for(int i = 0; i < dependencies.length; i++){
+			dependencies_list.add(dependencies[i]);
+		}
+		return dependencies_list;
 	}
 
 	//print function
-	public String print(){
+	public String print()
+	{
+		output();
 		//
 		//must have a dependency, must be mentioned in dependency
 		//error check for all nodes must be connected
-		//there cannot be a cycle
-		matcherror();
-		cycle_check();
+//		//there cannot be a cycle
+//		matcherror();
+//		cycle_check();
 		//
 
 //        //this is for test only
@@ -310,36 +445,71 @@ public class InputMenu extends JFrame{
 //		for(int i = 0; i < dependencies_list.size(); i++){
 //			System.out.println(dependencies_list.get(i));
 //		}
-//
+
 //		Input_node test = head;
 //		for(int i = 0; i < counter; i ++){
 //			System.out.println(test.get_index());
 //			test = test.get_next();
 //		}
+		
+//		sort();
 
-		sort();
-		print = "";
-		int index_counter = 1;
-		for(int i = 0; i < counter; i++){
-			Input_node temp = head;
-			for(int j = 0; j < counter; j++){
-				if(temp.get_index() == index_counter){
-					print = print + "activity: " + temp.get_activity() + " ";
-					print = print + "dependency: " + temp.get_dependency() + " ";
-					print = print + "duration: " + temp.get_duration() + " ";
-					print = print + "\n";
-				}
-				temp = temp.get_next();
-			}
-			index_counter += 1;
-		}
-		if (error_message == 1){
+		String print = "";
+
+//		int index_counter = 1;
+//		for(int i = 0; i < counter; i++){
+//			Input_node temp = head;
+//			for(int j = 0; j < counter; j++){
+//				if(temp.get_index() == index_counter){
+//					print = print + "activity: " + temp.get_activity() + " ";
+//					print = print + "dependency: " + temp.get_dependency() + " ";
+//					print = print + "duration: " + temp.get_duration() + " ";
+//					print = print + "\n";
+//				}
+//				temp = temp.get_next();
+//			}
+//			index_counter += 1;
+//		}
+//		if (error_message == 1){
+//			error_message = 0;
+//			return ("Error has occurred");
+//		}
+//		else{
+//			return print;
+//		}
+		if(error_message == 1){
 			error_message = 0;
-			return ("Error has occurred");
+			print += "Disconnected Error";
+		}
+		else if(error_message == 2){
+			error_message = 0;
+			print += "Cycle Error";
 		}
 		else{
-			return print;
+			output_list.clear();
+			duration_list.clear();
+			for(int i = 0; i < path_list.size(); i++){
+				String output_node = "";
+				int duration_node = 0;
+				for(int j = 0; j < path_list.get(i).size(); j++){
+					if(j != 0){
+						output_node += "->";
+					}
+					output_node += node_list.get(path_list.get(i).get(j)).get_activity();
+					duration_node += node_list.get(path_list.get(i).get(j)).get_duration();
+				}
+				output_node += ", ";
+				output_node += duration_node;
+				output_list.add(output_node);
+				duration_list.add(duration_node);
+			}
+			sort();
+			for(int i = 0; i < output_list.size(); i++){
+				print += output_list.get(duration_list.get(i));
+				print += "\n";
+			}
 		}
+		return print;
 	}
 	
 }
