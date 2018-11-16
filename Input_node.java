@@ -1,22 +1,19 @@
-/*
-Input_node.java by Kai Chen
-Version 1.0
-*/
+
 public class Input_node 
 {
 	private String activity;
 	private String dependency;
 	private int duration;
-	private int index;
-	private Input_node next;
+//	private int index;
+//	private Input_node next;
 	
 	Input_node()
 	{
 		activity = "";
 		dependency = "";
 		duration = 0;
-		index = 0;
-		next = null;
+//		index = 0;
+//		next = null;
 	}
 	
 	Input_node(String a, String b, int c)
@@ -41,15 +38,15 @@ public class Input_node
 		return duration;
 	}
 	
-	public int get_index()
-	{
-		return index;
-	}
+//	public int get_index()
+//	{
+//		return index;
+//	}
 	
-	public Input_node get_next()
-	{
-		return next;
-	}
+//	public Input_node get_next()
+//	{
+//		return next;
+//	}
 	
 	public void set_activity(String str)
 	{
@@ -66,13 +63,13 @@ public class Input_node
 		duration = num;
 	}
 	
-	public void set_index(int num)
-	{
-		index = num;
-	}
+//	public void set_index(int num)
+//	{
+//		index = num;
+//	}
 	
-	public void set_next(Input_node node)
-	{
-		next = node;
-	}
+//	public void set_next(Input_node node)
+//	{
+//		next = node;
+//	}
 }
