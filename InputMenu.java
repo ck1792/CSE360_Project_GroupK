@@ -1,6 +1,6 @@
 /*
 MainMenu.java by Dekart Kosa, Xiang Li, Kai Chen
-version 2.2
+version 2.3
 */
 
 import java.awt.EventQueue;
