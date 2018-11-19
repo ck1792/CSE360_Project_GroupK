@@ -29,6 +29,7 @@ public class InputMenu extends JFrame{
 	 * 0: no error
 	 * 1: disconnect
 	 * 2: cycle
+	 * 3: no starting point
 	 */
 	private int error_message = 0;
 
@@ -216,7 +217,7 @@ public class InputMenu extends JFrame{
 	{
 		path_list.clear();
 		disconnect();
-		if(error_message == 1){
+		if(error_message != 0){
 		}
 		else{
 			//find starting point
@@ -288,8 +289,11 @@ public class InputMenu extends JFrame{
 				starting_point_counter += 1;
 			}
 		}
-		if(starting_point_counter != 1){
+		if(starting_point_counter > 1){
 			error_message = 1;
+		}
+		if(starting_point_counter == 0){
+			error_message = 3;
 		}
 	}
 	
@@ -303,7 +307,9 @@ public class InputMenu extends JFrame{
 		
 		for(int i = 0; i < node_list.size(); i++){
 			if(!node_list.get(i).get_mark()){
-				error_message = 1;
+				if(error_message == 0){
+					error_message = 1;
+				}
 			}
 		}
 	}
@@ -505,6 +511,10 @@ public class InputMenu extends JFrame{
 		else if(error_message == 2){
 			error_message = 0;
 			print += "Cycle Error";
+		}
+		else if(error_message == 3){
+			error_message = 0;
+			print += "No starting point";
 		}
 		else{
 			output_list.clear();
