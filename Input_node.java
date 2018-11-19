@@ -1,15 +1,23 @@
 /*
 Input_node.java by Kai Chen
-version 1.1
+version 1.2
 */
+
 
 public class Input_node 
 {
 	private String activity;
 	private String dependency;
 	private int duration;
+	/*
+	 * version 1.1
+	 */
 //	private int index;
 //	private Input_node next;
+	/*
+	 * version 1.2
+	 */
+	private boolean mark;
 	
 	Input_node()
 	{
@@ -18,6 +26,7 @@ public class Input_node
 		duration = 0;
 //		index = 0;
 //		next = null;
+		mark = false;
 	}
 	
 	Input_node(String a, String b, int c)
@@ -52,6 +61,11 @@ public class Input_node
 //		return next;
 //	}
 	
+	public boolean get_mark()
+	{
+		return mark;
+	}
+	
 	public void set_activity(String str)
 	{
 		activity = str;
@@ -76,4 +90,9 @@ public class Input_node
 //	{
 //		next = node;
 //	}
+	
+	public void set_mark(boolean m)
+	{
+		mark = m;
+	}
 }
