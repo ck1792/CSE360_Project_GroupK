@@ -115,7 +115,7 @@ public class InputMenu extends JFrame{
 				output.setText("Restart completed.");
 			}
 		});
-		btnRestart.setBounds(320, 232, 78, 29);
+		btnRestart.setBounds(320, 210, 78, 29);
 		frame.getContentPane().add(btnRestart);
 		
 		JButton btnReturnToMenu = new JButton("Return to Main Menu");
@@ -127,7 +127,7 @@ public class InputMenu extends JFrame{
 				frame.dispose();
 			}
 		});
-		btnReturnToMenu.setBounds(152, 232, 156, 29);
+		btnReturnToMenu.setBounds(152, 210, 156, 29);
 		frame.getContentPane().add(btnReturnToMenu);
 		
 		output = new JTextField();
@@ -182,7 +182,7 @@ public class InputMenu extends JFrame{
 			}
 		});
 		//
-		btnAdd.setBounds(52, 232, 88, 29);
+		btnAdd.setBounds(52, 210, 88, 29);
 		frame.getContentPane().add(btnAdd);
 		
 		JLabel lblOutput = new JLabel("Message");
@@ -191,13 +191,13 @@ public class InputMenu extends JFrame{
 		
 		JLabel lblOutput2 = new JLabel("Output");
 		lblOutput2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblOutput2.setBounds(186, 320, 61, 16);
+		lblOutput2.setBounds(186, 260, 61, 16);
 		frame.getContentPane().add(lblOutput2);
 		
 		textField = new JTextArea();
 		textField.setBackground(Color.LIGHT_GRAY);
 		textField.setEditable(false);
-		textField.setBounds(50, 349, 348, 134);
+		textField.setBounds(50, 290, 350, 220);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		
@@ -208,7 +208,7 @@ public class InputMenu extends JFrame{
 				textField.append(print());
 			}
 		});
-		output.setBounds(171, 495, 100, 29);
+		output.setBounds(171, 520, 100, 29);
 		frame.getContentPane().add(output);
 	}
 	
@@ -290,6 +290,21 @@ public class InputMenu extends JFrame{
 		}
 		if(starting_point_counter != 1){
 			error_message = 1;
+		}
+	}
+	
+	private void disconnect_mark_check()
+	{
+		for(int i = 0; i < path_list.size(); i++){
+			for(int j = 0; j < path_list.get(i).size(); j++){
+				node_list.get(path_list.get(i).get(j)).set_mark(true);
+			}
+		}
+		
+		for(int i = 0; i < node_list.size(); i++){
+			if(!node_list.get(i).get_mark()){
+				error_message = 1;
+			}
 		}
 	}
 	
@@ -482,6 +497,7 @@ public class InputMenu extends JFrame{
 //		else{
 //			return print;
 //		}
+		disconnect_mark_check();
 		if(error_message == 1){
 			error_message = 0;
 			print += "Disconnected Error";
