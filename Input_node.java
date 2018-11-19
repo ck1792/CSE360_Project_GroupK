@@ -1,3 +1,7 @@
+/*
+Input_node.java by Kai Chen
+version 1.1
+*/
 
 public class Input_node 
 {
