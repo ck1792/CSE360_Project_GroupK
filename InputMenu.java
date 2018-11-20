@@ -3,6 +3,11 @@ MainMenu.java by Dekart Kosa, Xiang Li, Kai Chen
 version 2.3
 */
 
+/*
+MainMenu.java by Dekart Kosa, Xiang Li, Kai Chen
+version 2.3
+*/
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,10 +17,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 public class InputMenu extends JFrame{
 	
@@ -202,15 +211,57 @@ public class InputMenu extends JFrame{
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		JButton output = new JButton("Process");
-		output.addActionListener(new ActionListener() {
+		JButton output_btn = new JButton("Process");
+		output_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textField.setText("");
 				textField.append(print());
 			}
 		});
-		output.setBounds(171, 520, 100, 29);
-		frame.getContentPane().add(output);
+		output_btn.setBounds(101, 520, 100, 29);
+		frame.getContentPane().add(output_btn);
+		
+		JButton report = new JButton("Report");
+		report.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					PrintStream out = new PrintStream(new FileOutputStream("report.txt"));
+					for(int i = 0; i < node_list.size(); i++) {
+						out.println("activity: " + node_list.get(i).get_activity() + ", duration: " + node_list.get(i).get_duration());
+					}
+					out.println("");
+					output();
+					output_list.clear();
+					duration_list.clear();
+					for(int i = 0; i < path_list.size(); i++){
+						String output_node = "";
+						int duration_node = 0;
+						for(int j = 0; j < path_list.get(i).size(); j++){
+							if(j != 0){
+								output_node += "->";
+							}
+							output_node += node_list.get(path_list.get(i).get(j)).get_activity();
+							duration_node += node_list.get(path_list.get(i).get(j)).get_duration();
+						}
+						output_node += ", ";
+						output_node += duration_node;
+						output_list.add(output_node);
+						duration_list.add(duration_node);
+					}
+					sort();
+					for(int i = 0; i < output_list.size(); i++){
+						out.print(output_list.get(duration_list.get(i)));
+						out.println("");;
+					}
+					out.close();
+					output.setText("Report file has been created.");
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		report.setBounds(241, 520, 100, 29);
+		frame.getContentPane().add(report);
 	}
 	
 	public void output()
