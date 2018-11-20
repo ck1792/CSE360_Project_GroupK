@@ -26,7 +26,9 @@ public class InputMenu extends JFrame{
 	private ArrayList<Input_node> node_list = new ArrayList<Input_node>();
 	private ArrayList<ArrayList<Integer>> path_list = new ArrayList<ArrayList<Integer>>();
 	private ArrayList<Integer> duration_list = new ArrayList<Integer>();
+	private ArrayList<Integer> order_list = new ArrayList<Integer>();
 	private ArrayList<String> output_list = new ArrayList<String>();
+	private String file_name = "";
 //	private Input_node head;
 //	private int counter = 0;
 	/*
@@ -159,7 +161,16 @@ public class InputMenu extends JFrame{
 						}
 						else{
 							Input_node node = new Input_node(a,b,c);
-							node_list.add(node);
+							boolean added = false;
+							for(int i = 0; i < node_list.size(); i++){
+								if(a.equals(node_list.get(i).get_activity())){
+									node_list.set(i, node);
+									added = true;
+								}
+							}
+							if(!added){
+								node_list.add(node);
+							}
 //							counter += 1;
 //							if(head == null){
 //								head = node;
@@ -178,6 +189,9 @@ public class InputMenu extends JFrame{
 							dependencies.setText("");
 							duration.setText("");
 							output.setText("A new node has been added.");
+							if(added){
+								output.setText("The node has been changed.");
+							}
 						}
 					} catch(NumberFormatException exception){
 						//fails
@@ -213,50 +227,101 @@ public class InputMenu extends JFrame{
 				textField.append(print());
 			}
 		});
-		output_btn.setBounds(101, 520, 100, 29);
+		output_btn.setBounds(51, 520, 100, 29);
 		frame.getContentPane().add(output_btn);
 		
 		JButton report = new JButton("Report");
 		report.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					PrintStream out = new PrintStream(new FileOutputStream("report.txt"));
-					for(int i = 0; i < node_list.size(); i++) {
-						out.println("activity: " + node_list.get(i).get_activity() + ", duration: " + node_list.get(i).get_duration());
-					}
-					out.println("");
-					output();
-					output_list.clear();
-					duration_list.clear();
-					for(int i = 0; i < path_list.size(); i++){
-						String output_node = "";
-						int duration_node = 0;
-						for(int j = 0; j < path_list.get(i).size(); j++){
-							if(j != 0){
-								output_node += "->";
-							}
-							output_node += node_list.get(path_list.get(i).get(j)).get_activity();
-							duration_node += node_list.get(path_list.get(i).get(j)).get_duration();
+					textField.setText("");
+					textField.append("Please input the report file name in Acivity text window.");
+					textField.append("\nOnce added, please click 'report' button again.");
+					if(file_name.equals("")){
+						file_name =  activity.getText();
+						if(file_name.equals("")){
+							output.setText("File name can not be empty");
 						}
-						output_node += ", ";
-						output_node += duration_node;
-						output_list.add(output_node);
-						duration_list.add(duration_node);
+						else{
+							output.setText("File name added.");
+						}
 					}
-					sort();
-					for(int i = 0; i < output_list.size(); i++){
-						out.print(output_list.get(duration_list.get(i)));
-						out.println("");;
+					else{
+						PrintStream out = new PrintStream(new FileOutputStream(file_name + ".txt"));
+						for(int i = 0; i < node_list.size(); i++) {
+							out.println("activity: " + node_list.get(i).get_activity() + ", duration: " + node_list.get(i).get_duration());
+						}
+						out.println("");
+						output();
+						output_list.clear();
+						duration_list.clear();
+						for(int i = 0; i < path_list.size(); i++){
+							String output_node = "";
+							int duration_node = 0;
+							for(int j = 0; j < path_list.get(i).size(); j++){
+								if(j != 0){
+									output_node += "->";
+								}
+								output_node += node_list.get(path_list.get(i).get(j)).get_activity();
+								duration_node += node_list.get(path_list.get(i).get(j)).get_duration();
+							}
+							output_node += ", ";
+							output_node += duration_node;
+							output_list.add(output_node);
+							duration_list.add(duration_node);
+						}
+						sort();
+						for(int i = 0; i < output_list.size(); i++){
+							out.print(output_list.get(duration_list.get(i)));
+							out.println("");;
+						}
+						String critical_path = "";
+						for(int i = 0; i < duration_list.size(); i++){
+							if(i == 0){
+								critical_path += output_list.get(duration_list.get(i));
+								critical_path += "\n";
+							}
+							else if(order_list.get(duration_list.get(i)) == order_list.get(duration_list.get(0))){
+								critical_path += output_list.get(duration_list.get(i));
+								critical_path += "\n";
+							}
+						}
+						out.println("");
+						out.println("Critical path:");
+						out.println(critical_path);
+						out.close();
+						output.setText("Report file has been created.");
 					}
-					out.close();
-					output.setText("Report file has been created.");
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
 			}
 		});
-		report.setBounds(241, 520, 100, 29);
+		report.setBounds(301, 520, 100, 29);
 		frame.getContentPane().add(report);
+		
+		JButton output_cp = new JButton("Critical Path");
+		output_cp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				print();
+				String critical_path = "";
+				for(int i = 0; i < duration_list.size(); i++){
+					if(i == 0){
+						critical_path += output_list.get(duration_list.get(i));
+						critical_path += "\n";
+					}
+					else if(order_list.get(duration_list.get(i)) == order_list.get(duration_list.get(0))){
+						critical_path += output_list.get(duration_list.get(i));
+						critical_path += "\n";
+					}
+				}
+				textField.setText("");
+				textField.append("Critical path: \n");
+				textField.append(critical_path);
+			}
+		});
+		output_cp.setBounds(166, 520, 120, 29);
+		frame.getContentPane().add(output_cp);
 	}
 	
 	public void output()
@@ -565,6 +630,7 @@ public class InputMenu extends JFrame{
 		else{
 			output_list.clear();
 			duration_list.clear();
+			order_list.clear();
 			for(int i = 0; i < path_list.size(); i++){
 				String output_node = "";
 				int duration_node = 0;
@@ -579,6 +645,7 @@ public class InputMenu extends JFrame{
 				output_node += duration_node;
 				output_list.add(output_node);
 				duration_list.add(duration_node);
+				order_list.add(duration_node);
 			}
 			sort();
 			for(int i = 0; i < output_list.size(); i++){
